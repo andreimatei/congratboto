@@ -4,16 +4,15 @@ import argparse
 from bs4 import BeautifulSoup
 from datetime import datetime
 import logging
-import re
-import time
-import threading
-import urllib2
-import urllib
-import sys
 import os
+import random
+import re
+import sys
+import threading
+import urllib
+import urllib2
 from cookielib import CookieJar
 from yapsy.PluginManager import PluginManager
-from yapsy.IPlugin import IPlugin
 
 import fbbot_utils
 
@@ -37,9 +36,6 @@ parser.add_argument('--bot_pwd', required = True)
 parser.add_argument('--log_file', default='/tmp/congratboto-%s/log' % timestamp_for_file())
 
 flags = parser.parse_args()
-
-thread_id = flags.thread_id
-thread_id_encoded = urllib2.quote(thread_id)
 
 
 def get_logs_dir():
@@ -102,9 +98,10 @@ def login():
   timer.start()
 
 
-def read_thread():
+def read_thread(thread_id):
   # curl -X GET 'https://m.facebook.com/messages/read/?tid=mid.1384722860563%3A3932eedf826bf6c982' --verbose --user-agent $USER_AGENT --cookie $COOKIES --cookie-jar $COOKIES > out.html
-  response = fbbot_utils.opener.open("https://m.facebook.com/messages/read/?tid=%s" % thread_id_encoded)
+  response = fbbot_utils.opener.open("https://m.facebook.com/messages/read/?tid=%s" %
+                                     urllib2.quote(thread_id))
   content = response.read()
   return content
 
@@ -178,45 +175,52 @@ def read_checkpoint():
   f.close()
   return latest
 
-def poll():
+def poll(thread_id, all_plugins):
   global view
   try:
-    page = read_thread()
+    page = read_thread(thread_id)
     view = parse_page(page)
 
     if view:
       fbbot_utils.csrf_token = view.csrf_token
-      for pluginInfo in simplePluginManager.getAllPlugins():
+      for pluginInfo in all_plugins:
         pluginInfo.plugin_object.handle_messages(thread_id, view.message_groups)
   except Exception:
     logger.exception('Error while polling. Will continue polling.')
 
   # Schedule the next poll.
-  timer = threading.Timer(POLL_PERIOD_SEC, poll)
+  # The wait time is somewhere between 0.9 and 1.1 of POLL_PERIOD_SEC.
+  wait_time = (0.9 + 0.2 * random.random()) * POLL_PERIOD_SEC
+  timer = threading.Timer(wait_time, lambda : poll(thread_id, all_plugins))
   timer.daemon = True
   timer.start()
 
-simplePluginManager = PluginManager()
-cur_dir = os.path.dirname(__file__)
-simplePluginManager.setPluginPlaces([os.path.join(cur_dir, 'plugins')])
-# Load all plugins
-simplePluginManager.collectPlugins()
-for pluginInfo in simplePluginManager.getAllPlugins():
-  simplePluginManager.activatePluginByName(pluginInfo.name)
-  logger.info('Plugin detected: %s', pluginInfo.plugin_object.get_name())
+def main():
+  simplePluginManager = PluginManager()
+  cur_dir = os.path.dirname(__file__)
+  simplePluginManager.setPluginPlaces([os.path.join(cur_dir, 'plugins')])
+  # Load all plugins
+  simplePluginManager.collectPlugins()
+  for pluginInfo in simplePluginManager.getAllPlugins():
+    simplePluginManager.activatePluginByName(pluginInfo.name)
+    logger.info('Plugin detected: %s', pluginInfo.plugin_object.get_name())
+  
+  logger.info('CongratBoto starting. Watching thread: %s', flags.thread_id)
+  login()
+  poll(flags.thread_id, simplePluginManager.getAllPlugins())
 
-logger.info('CongratBoto starting. Watching thread: %s', thread_id)
-login()
-poll()
+  #message = 'Turma Bot is in the house at %s' % datetime.datetime.now()
+  # post_message(message, view.csrf_token)
+  
+  while True:
+    command = raw_input('Enter command: ')
+    if command == 'quit':
+      print 'Quitting!'
+      return 0
+    elif command == 'post':
+      message = raw_input('Enter message: ')
+      fbbot_utils.post_message(flags.thread_id, message)
 
-#message = 'Turma Bot is in the house at %s' % datetime.datetime.now()
-# post_message(message, view.csrf_token)
 
-while True:
-  command = raw_input('Enter command: ')
-  if command == 'quit':
-    print 'Quitting!'
-    sys.exit(0)
-  elif command == 'post':
-    message = raw_input('Enter message: ')
-    fbbot_utils.post_message(thread_id, message)
+if __name__ == '__main__':
+  sys.exit(main())

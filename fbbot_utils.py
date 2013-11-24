@@ -1,5 +1,4 @@
 import logging
-import urllib2
 import urllib
 from yapsy.IPlugin import IPlugin
 
