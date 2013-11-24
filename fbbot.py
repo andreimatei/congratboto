@@ -195,19 +195,25 @@ def poll(thread_id, all_plugins):
   timer.daemon = True
   timer.start()
 
-def main():
+
+def LoadPlugins():
   simplePluginManager = PluginManager()
   cur_dir = os.path.dirname(__file__)
   simplePluginManager.setPluginPlaces([os.path.join(cur_dir, 'plugins')])
-  # Load all plugins
   simplePluginManager.collectPlugins()
-  for pluginInfo in simplePluginManager.getAllPlugins():
+  all_plugins = simplePluginManager.getAllPlugins()
+  for pluginInfo in all_plugins:
     simplePluginManager.activatePluginByName(pluginInfo.name)
     logger.info('Plugin detected: %s', pluginInfo.plugin_object.get_name())
-  
-  logger.info('CongratBoto starting. Watching thread: %s', flags.thread_id)
+  return all_plugins
+
+
+def main():
+  logger.info('CongratBoto starting')
+  all_plugins = LoadPlugins()
   login()
-  poll(flags.thread_id, simplePluginManager.getAllPlugins())
+  logger.info('Watching thread: %s', flags.thread_id)
+  poll(flags.thread_id, all_plugins)
 
   #message = 'Turma Bot is in the house at %s' % datetime.datetime.now()
   # post_message(message, view.csrf_token)
