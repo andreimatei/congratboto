@@ -2,8 +2,6 @@ import logging
 import random
 import re
 
-import fbbot_utils
-
 logger = logging.getLogger('congratboto')
 random.seed()
 
@@ -33,16 +31,16 @@ def generate_message(adresee):
   else:
     return tup
 
+BOT_NAME = "Turma Bot"
+class CongratBoto(object):
+  def __init__(self, session):
+    self.session = session
 
-class CongratBoto(fbbot_utils.BotoPlugin):
-  def get_name(self):
-    return "CongratBoto"
-
-  def handle_messages(self, thread_id, msg_groups):
+  def HandleMessages(self, thread_id, msg_groups):
     congrat_needed = False
     to_congrat = []
     for group in msg_groups:
-      if group.author == fbbot_utils.BOT_NAME:
+      if group.author == BOT_NAME:
         # clear everything from before
         congrat_needed = False
         del to_congrat[:]
@@ -59,6 +57,6 @@ class CongratBoto(fbbot_utils.BotoPlugin):
       return
     if to_congrat:
       for name in to_congrat:
-        fbbot_utils.post_message(thread_id, generate_message(name))
+        self.session.PostMessage(thread_id, generate_message(name))
     else:
-      fbbot_utils.post_message(thread_id, generate_message(None))
+      self.session.PostMessage(thread_id, generate_message(None))
