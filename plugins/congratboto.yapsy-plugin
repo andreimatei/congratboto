@@ -1,9 +1,0 @@
-[Core]
-Name = Plugin 1
-Module = congratboto
-
-[Documentation]
-Author = Andrei Matei
-Version = 0.1
-Website = 
-Description = CongratBoto!

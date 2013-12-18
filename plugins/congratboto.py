@@ -14,7 +14,7 @@ def generate_message(adresee):
               ('My own son could not have done it better!', 'My own son could not have done it better, %s!'),
               ('Amazeballs!', '%s -> amazeballs!'),
               ('Dude, if you were binary, you\'d be all 1s, no 0s.', '%s, if you were binary, you\'d be all 1s, no 0s.'),
-              ('Now that\'s a true turmanos!', '%s is again a true turmanos!'),
+              ('Now that\'s a true Turmano!', '%s is again a true Turmano!'),
               ('Take it from me, Congratboto, I have not seen anything like this before!'),
               ('Now this guy deserves a parteeeeeeeeeeeeeeeey!', '%s deserves a parteeeeeeeeeeeeeeeey!'),
               ('From boto a mano, you simply rule!', 'From boto a mano, you simply rule, %s!'),
@@ -31,32 +31,35 @@ def generate_message(adresee):
   else:
     return tup
 
-BOT_NAME = "Turma Bot"
-class CongratBoto(object):
-  def __init__(self, session):
-    self.session = session
+BOT_ID = "100007101244912"
 
-  def HandleMessages(self, thread_id, msg_groups):
+TRIGGER = re.compile('.*((\+congratboto?|congratulations|(good|awesome|great) job)(\s([a-zA-Z0-9]+).*)?|awesome|amazeballs).*', re.IGNORECASE)
+
+class CongratBoto(object):
+  def __init__(self, write_session):
+    self.write_session = write_session
+
+  def HandleMessages(self, thread_id, conversation):
+    messages = conversation.messages
     congrat_needed = False
     to_congrat = []
-    for group in msg_groups:
-      if group.author == BOT_NAME:
+    for message in messages:
+      if not message.text: continue
+      if message.user and message.user.uid == BOT_ID:
         # clear everything from before
         congrat_needed = False
         del to_congrat[:]
         continue
-      for msg in group.messages:
-        r = re.compile('.*\+congratboto?(\s([a-zA-Z0-9]+).*)?.*', re.IGNORECASE)
-        match = r.match(msg)
-        if match:
-          congrat_needed = True
-          if match.groups()[1]:
-            to_congrat.append(match.groups()[1])
+      match = TRIGGER.match(message.text)
+      if match:
+        congrat_needed = True
+        if match.groups()[4]:
+          to_congrat.append(match.groups()[4])
     # post replies, if need
     if not congrat_needed:
       return
     if to_congrat:
       for name in to_congrat:
-        self.session.PostMessage(thread_id, generate_message(name))
+        self.write_session.PostMessage(thread_id, generate_message(name))
     else:
-      self.session.PostMessage(thread_id, generate_message(None))
+      self.write_session.PostMessage(thread_id, generate_message(None))
