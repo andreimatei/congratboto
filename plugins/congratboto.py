@@ -21,6 +21,7 @@ def generate_message(adresee):
               ('It\'s like you\'re a damn robot! But in a good way.', '%s, it\'s like you\'re a damn robot! But in a good way.'),
               ('Boy, did you just swish past Usain Bolt just now?', '%s, did you just swish past Usain Bolt just now?'),
               ('You\'re classy. You\'re so classy that you spell "balls" as "bowles".', 'You\'re classy, %s. You\'re so classy that you spell "balls" as "bowles".'),
+              ('Congrats, Turma will send you to a non-exclusive, honey-coated session at the Lap Dance Depot!', 'Congrats %s, Turma will send you to a non-exclusive, honey-coated session at the Lap Dance Depot!'),
              ]
   tup = random.choice(messages)
   if isinstance(tup, tuple) and len(tup) == 2:
