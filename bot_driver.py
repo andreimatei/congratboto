@@ -8,7 +8,6 @@ import sys
 from bot_driver_util import *
 import facebook
 import facebook_graph
-import logs
 from plugins.eliza_plugin import ElizaPlugin
 from plugins.congratboto import CongratBoto
 
@@ -19,7 +18,7 @@ parser.add_argument('--bot_pwd', required = True)
 parser.add_argument('--log_dir', default='/tmp/congratboto-%s' % logs.timestamp_for_file())
 FLAGS = parser.parse_args()
 
-logger = logs.CreateLogger(logging.DEBUG, os.path.join(FLAGS.log_dir, "log"))
+logger = logging.getLogger()
 
 def main():
   logger.info('CongratBoto starting')

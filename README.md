@@ -10,5 +10,5 @@ https://help.github.com/articles/set-up-git
 1. Install BeautifulSoup  
 http://www.crummy.com/software/BeautifulSoup/#Download
 
-1. Install Yapsy  
+(no longer necessary) 1. Install Yapsy  
 http://sourceforge.net/projects/yapsy/
