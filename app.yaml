@@ -5,5 +5,9 @@ api_version: 1
 threadsafe: no
 
 handlers:
+- url: /poll\.html
+  script: helloworld.py
+
 - url: /.*
   script: helloworld.py
+

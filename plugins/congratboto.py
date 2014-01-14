@@ -33,6 +33,7 @@ def generate_message(adresee):
 
 BOT_ID = "100007101244912"
 
+#TODO(burbelica): only trigger on "awesome" if it's before a separator, not in the middle of a random phrase 
 TRIGGER = re.compile('.*((\+congratboto?|congratulations|(good|awesome|great) job)(\s([a-zA-Z0-9]+).*)?|awesome|amazeballs).*', re.IGNORECASE)
 
 class CongratBoto(object):
