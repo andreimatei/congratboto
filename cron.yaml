@@ -1,0 +1,4 @@
+cron:
+- description: daily summary job
+  url: /poll.html?bot_email=turmabot@gmail.com&bot_pwd=romaniabrazil19702-3&access_token=CAADJVReNrQwBAA8gs3GqW51RKP0ctJZBapdrZAqveassZA7sbZAIYfG1yvD1pmjfjjlwLh5tign1SKnyCZAh9OcT7bwNq2IEykZAmGjpFR64Jp3puf390DKEiGc2IJNiYwrvx6oFMpg4tEQG3iklfCfZC1Qpmjn3OXvY11GzZBdjgnVzPEgotVrmnEmOUSKNV3gZD
+  schedule: every 1 minutes
