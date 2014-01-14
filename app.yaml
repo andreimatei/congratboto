@@ -6,8 +6,8 @@ threadsafe: no
 
 handlers:
 - url: /poll\.html
-  script: helloworld.py
+  script: page_handler.py
 
 - url: /.*
-  script: helloworld.py
+  script: page_handler.py
 
