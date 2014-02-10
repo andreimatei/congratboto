@@ -12,6 +12,7 @@ import facebook
 import facebook_graph
 from plugins.eliza_plugin import ElizaPlugin
 from plugins.congratboto import CongratBoto
+from plugins.score_keeper_plugin import ScoreKeeper
 
 
 logger = logging.getLogger('page_handler')
@@ -34,7 +35,7 @@ class PollPage(webapp.RequestHandler):
     
     write_session = facebook.FacebookSession('Turma Bot', bot_email, bot_pwd)
     read_session = facebook_graph.FacebookGraphSession(access_token)
-    all_plugins = [CongratBoto(write_session), ElizaPlugin(write_session)]
+    all_plugins = [CongratBoto(write_session), ElizaPlugin(write_session), ScoreKeeper(write_session)]
     bot_driver_util.PollConversation(read_session, all_plugins, False)
 
  

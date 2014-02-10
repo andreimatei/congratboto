@@ -10,6 +10,7 @@ import facebook
 import facebook_graph
 from plugins.eliza_plugin import ElizaPlugin
 from plugins.congratboto import CongratBoto
+from plugins.score_keeper_plugin import ScoreKeeper
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--access_token', required = True)
@@ -24,7 +25,7 @@ def main():
   logger.info('CongratBoto starting')
   write_session = facebook.FacebookSession('Turma Bot', FLAGS.bot_email, FLAGS.bot_pwd)
   read_session = facebook_graph.FacebookGraphSession(FLAGS.access_token)
-  all_plugins = [CongratBoto(write_session), ElizaPlugin(write_session)]
+  all_plugins = [CongratBoto(write_session), ElizaPlugin(write_session), ScoreKeeper(write_session)]
   PollConversation(read_session, all_plugins, true)
   
   while True:
