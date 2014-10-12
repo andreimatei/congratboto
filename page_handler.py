@@ -48,10 +48,10 @@ def main():
 if __name__ == "__main__":
   #set the format on the root logger
   if os.environ.get('SERVER_SOFTWARE','').startswith('Development'):
-    format = '[%(asctime)s %(filename)s:%(lineno)s - %(funcName)s()] %(message)s'
+    log_format = '[%(asctime)s %(filename)s:%(lineno)s - %(funcName)s()] %(message)s'
   else:
-    format = '[%(filename)s:%(lineno)s - %(funcName)s()] %(message)s'
-  fmt = logging.Formatter(format)
+    log_format = '[%(filename)s:%(lineno)s - %(funcName)s()] %(message)s'
+  fmt = logging.Formatter(log_format)
   logging.getLogger().handlers[0].setFormatter(fmt)
   logger.info('CongratBoto starting')
   main()
