@@ -1,7 +1,6 @@
 import cookielib
 import datetime
 import logging
-import re
 import urllib
 import urllib2
 
