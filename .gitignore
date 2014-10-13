@@ -53,5 +53,3 @@ nosetests.xml
 .mr.developer.cfg
 .project
 .pydevproject
-
-cron.yaml
