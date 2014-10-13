@@ -5,9 +5,9 @@ import logging
 import os
 import sys
 
-from bot_driver_util import *
-import facebook
-import facebook_graph
+from congratboto.congratboto.bot_driver_util import *
+from congratboto.congratboto import facebook
+from congratboto.congratboto import facebook_graph
 from plugins.eliza_plugin import ElizaPlugin
 from plugins.congratboto import CongratBoto
 from plugins.score_keeper_plugin import ScoreKeeper

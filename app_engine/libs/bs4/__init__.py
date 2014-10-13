@@ -137,7 +137,7 @@ class BeautifulSoup(Tag):
         if len(kwargs) > 0:
             arg = kwargs.keys().pop()
             raise TypeError(
-                "__init__() got an unexpected keyword argument '%s'" % arg)
+                "app_engine() got an unexpected keyword argument '%s'" % arg)
 
         if builder is None:
             if isinstance(features, basestring):
