@@ -2,10 +2,7 @@ import unittest
 
 import congratboto
 
-class MessageGroup(object):
-  def __init__(self, author, messages):
-    self.author = author
-    self.messages = messages
+from facebook_graph import Conversation, Message, User
 
 class FakeSession(object):
   def __init__(self):
@@ -20,10 +17,11 @@ class CongratBotoTest(unittest.TestCase):
     session = FakeSession()
     thread_id = "<tid>"
     boto = congratboto.CongratBoto(session)
-    boto.HandleMessages(thread_id, [
-      MessageGroup("Turma Bot", ["+congratboto Man"]),
-      MessageGroup("<author1>", ["+congratboto Man"]),
-    ])
+    boto_user = User(uid=congratboto.BOT_ID, name="Turma Bot")
+    boto.HandleMessages(thread_id, Conversation(cid="c0", members=[], messages=[
+      Message(mid="m0", user=boto_user, text="+congratboto Man"),
+      Message(mid="m1", user=User(uid="u2", name="<author1>"), text="+congratboto Man"),
+    ]))
     print session.messages
     self.assertEquals(1, len(session.messages))
     self.assertEqual("<tid>", session.messages[0][0])

@@ -85,12 +85,6 @@ def CreateFacebookOpener(user_name, user_email, user_password):
     raise Exception("Did not find user %s on output page" % user_name)
 
 
-class MessageGroup:
-  def __init__(self):
-    self.author = None
-    self.messages = []
-
-
 def ExtractCsrfTokenFromThreadPage(html_doc):
   try:
     soup = bs4.BeautifulSoup(html_doc)
