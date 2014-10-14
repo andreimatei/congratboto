@@ -2,13 +2,5 @@
 
 Facebook chat bot
 
-## Getting Started
-
-1. Set up git  
-https://help.github.com/articles/set-up-git
-
-1. Install BeautifulSoup  
-http://www.crummy.com/software/BeautifulSoup/#Download
-
-(no longer necessary) 1. Install Yapsy  
-http://sourceforge.net/projects/yapsy/
+* [Getting Started](https://github.com/andreimatei/congratboto/wiki/Getting-Started)
+* [Facebook API](https://github.com/andreimatei/congratboto/wiki/Facebook-API)
