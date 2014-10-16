@@ -38,11 +38,8 @@ BOT_ID = "100007101244912"
 TRIGGER = re.compile('.*((\+congratboto?|congratulations|(good|awesome|great) job)(\s([a-zA-Z0-9]+).*)?|awesome|amazeballs).*', re.IGNORECASE)
 
 class CongratBoto(object):
-  def __init__(self, write_session):
-    self.write_session = write_session
-
-  def HandleMessages(self, thread_id, conversation):
-    messages = conversation.messages
+  def HandleMessages(self, conversation):
+    messages = conversation.GetMessages()
     congrat_needed = False
     to_congrat = []
     for message in messages:
@@ -62,6 +59,6 @@ class CongratBoto(object):
       return
     if to_congrat:
       for name in to_congrat:
-        self.write_session.PostMessage(thread_id, generate_message(name))
+        conversation.PostMessage(generate_message(name))
     else:
-      self.write_session.PostMessage(thread_id, generate_message(None))
+      conversation.PostMessage(generate_message(None))

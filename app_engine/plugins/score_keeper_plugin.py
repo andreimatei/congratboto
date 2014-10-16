@@ -14,27 +14,24 @@ class Participant(db.Model):
 TRIGGER = re.compile('.*?([a-zA-Z0-9]*)((\\+\\+)|(--)).*', re.IGNORECASE)
 
 class ScoreKeeper(object):
-  def __init__(self, write_session):
-    self.write_session = write_session
-  
   def GenerateKey(self, thread_id, addressee):
     return "%s-%s" % (thread_id, addressee)
   
-  def IncrementScore(self, thread_id, addressee, increment):
+  def IncrementScore(self, conversation, addressee, increment):
     addressee = addressee.capitalize()
-    participant_key = self.GenerateKey(thread_id, addressee)
+    participant_key = self.GenerateKey(conversation.GetThreadId(), addressee)
     participant = db.get(db.Key.from_path('Participant', participant_key))
     if not participant:
-      participant = Participant(key_name = self.GenerateKey(thread_id, addressee))
+      participant = Participant(key_name = self.GenerateKey(conversation.GetThreadId(), addressee))
       participant.name = addressee
       participant.score = increment
-      participant.thread_id = thread_id
+      participant.thread_id = conversation.GetThreadId()
       participant.put()
-      self.write_session.PostMessage(thread_id, "Hello %s. You start at %d." % (addressee, increment))
+      conversation.PostMessage("Hello %s. You start at %d." % (addressee, increment))
       return
     participant.score += increment
     participant.put()
-    self.write_session.PostMessage(thread_id, "%s, you're at %d." % (addressee, participant.score))
+    conversation.PostMessage("%s, you're at %d." % (addressee, participant.score))
   
   def PrintScores(self, thread_id):
     q = Participant.all()
@@ -50,8 +47,8 @@ class ScoreKeeper(object):
       message += '%-*s -> %d\n' % (max_name_width + 1, p.name, p.score)
     self.write_session.PostMessage(thread_id, message)      
 
-  def HandleMessages(self, thread_id, conversation):
-    messages = conversation.messages
+  def HandleMessages(self, conversation):
+    messages = conversation.GetMessages()
     to_score = []  # (name, increment)
     scores_needed = False
     for message in messages:
@@ -70,7 +67,7 @@ class ScoreKeeper(object):
     # post replies, if need
     if to_score:
       for (name, increment) in to_score:
-        self.IncrementScore(thread_id, name, increment)
+        self.IncrementScore(conversation, name, increment)
     if scores_needed:
-      self.PrintScores(thread_id)
+      self.PrintScores(conversation.GetThreadId())
     

@@ -1,16 +1,21 @@
 import eliza
+import logging
+
+logger = logging.getLogger('eliza_plugin')
 
 BOT_ID = "100007101244912"
 
 class ElizaPlugin(object):
-  def __init__(self, write_session):
-    self.write_session = write_session
+  def __init__(self):
     self.therapist = eliza.eliza()
 
-  def HandleMessages(self, thread_id, conversation):
-    if len(conversation.members) > 2: return
-    if not conversation.messages: return
-    last_message = conversation.messages[-1]
+  def HandleMessages(self, conversation):
+    if len(conversation.GetMembers()) > 2: return
+    if not conversation.GetMessages(): return
+    last_message = conversation.GetMessages()[-1]
     if last_message.user is not None and last_message.user.uid == BOT_ID:
       return
-    self.write_session.PostMessage(thread_id, self.therapist.respond(last_message.text))
+    if not last_message.text:
+      # This happens if the message is special, like an emoticon.
+      return
+    conversation.PostMessage(self.therapist.respond(last_message.text))
