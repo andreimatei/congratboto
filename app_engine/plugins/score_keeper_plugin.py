@@ -33,9 +33,9 @@ class ScoreKeeper(object):
     participant.put()
     conversation.PostMessage("%s, you're at %d." % (addressee, participant.score))
   
-  def PrintScores(self, thread_id):
+  def PrintScores(self, conversation):
     q = Participant.all()
-    q.filter("thread_id =", thread_id)
+    q.filter("thread_id =", conversation.GetThreadId())
     
     participants = q.run()
     participants = sorted(participants, key=attrgetter('score'), reverse=True)
@@ -45,7 +45,7 @@ class ScoreKeeper(object):
     message = '==== LEADERBOARD ====\n'
     for p in participants:
       message += '%-*s -> %d\n' % (max_name_width + 1, p.name, p.score)
-    self.write_session.PostMessage(thread_id, message)      
+    conversation.PostMessage(message)      
 
   def HandleMessages(self, conversation):
     messages = conversation.GetMessages()
@@ -69,5 +69,5 @@ class ScoreKeeper(object):
       for (name, increment) in to_score:
         self.IncrementScore(conversation, name, increment)
     if scores_needed:
-      self.PrintScores(conversation.GetThreadId())
+      self.PrintScores(conversation)
     
