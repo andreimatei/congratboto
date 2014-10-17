@@ -28,8 +28,7 @@ class PollPage(webapp.RequestHandler):
     access_token = self.request.get('access_token')
 
     self.response.headers['Content-Type'] = 'text/plain'
-    self.response.out.write('Hello, webapp World!<br>')
-    self.response.out.write('bot email: %s password: %s' % (bot_email, bot_pwd))
+    self.response.out.write('Runnin Congratboto')
     
     logger.info('Request: bot email: %s password: %s access_token: %s' % (bot_email, bot_pwd, access_token))
     
