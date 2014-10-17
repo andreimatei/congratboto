@@ -26,12 +26,11 @@ class PollPage(webapp.RequestHandler):
     bot_email = self.request.get('bot_email')
     bot_pwd = self.request.get('bot_pwd')
     access_token = self.request.get('access_token')
+    logger.info('Request: bot email: %s password: %s access_token: %s' % (bot_email, bot_pwd, access_token))
 
     self.response.headers['Content-Type'] = 'text/plain'
-    self.response.out.write('Runnin Congratboto')
-    
-    logger.info('Request: bot email: %s password: %s access_token: %s' % (bot_email, bot_pwd, access_token))
-    
+    self.response.out.write('Running Congratboto')
+
     write_session = facebook.FacebookSession('Turma Bot', bot_email, bot_pwd)
     boto_user = facebook_graph.AuthenticatedUser(write_session, access_token)
     all_plugins = [CongratBoto(), ElizaPlugin(), ScoreKeeper()]

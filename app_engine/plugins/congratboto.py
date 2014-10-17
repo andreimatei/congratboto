@@ -39,7 +39,7 @@ TRIGGER = re.compile('.*((\+congratboto?|congratulations|(good|awesome|great) jo
 
 class CongratBoto(object):
   def HandleMessages(self, conversation):
-    messages = conversation.GetMessages()
+    messages = conversation.Messages()
     congrat_needed = False
     to_congrat = []
     for message in messages:

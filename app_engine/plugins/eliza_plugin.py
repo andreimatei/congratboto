@@ -10,9 +10,9 @@ class ElizaPlugin(object):
     self.therapist = eliza.eliza()
 
   def HandleMessages(self, conversation):
-    if len(conversation.GetMembers()) > 2: return
-    if not conversation.GetMessages(): return
-    last_message = conversation.GetMessages()[-1]
+    if len(conversation.Members()) > 2: return
+    if not conversation.Messages(): return
+    last_message = conversation.Messages()[-1]
     if last_message.user is not None and last_message.user.uid == BOT_ID:
       return
     if not last_message.text:

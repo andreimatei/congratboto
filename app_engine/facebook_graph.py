@@ -21,13 +21,13 @@ class UserConversation(object):
     self._members = members
     self._messages = messages
 
-  def GetMembers(self):
+  def Members(self):
     return self._members
 
-  def GetMessages(self):
+  def Messages(self):
     return self._messages
 
-  def GetThreadId(self):
+  def ThreadId(self):
     return self._tid
 
   def PostMessage(self, message):

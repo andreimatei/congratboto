@@ -9,7 +9,7 @@ class UserConversation(object):
     self._initial_messages = messages
     self._posted_messages = []
 
-  def GetMessages(self):
+  def Messages(self):
     return self._initial_messages
 
   def GetPostedMessages(self):
