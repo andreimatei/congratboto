@@ -1,61 +1,48 @@
+import abc
+import collections
 import re
-from operator import attrgetter
 
-from google.appengine.ext import db
 
 BOT_ID = "100007101244912"
 
 
-class Participant(db.Model):
-  """Models an individual chat participant, with her score."""
-  thread_id = db.StringProperty(indexed=True)
-  name = db.StringProperty(indexed=False)
-  score = db.IntegerProperty(indexed=False)
+class ScoreTable(object):
+  """Keeps track of user scores in a thread"""
+  __metaclass__ = abc.ABCMeta
 
+  @abc.abstractmethod
+  def IncrementParticipantScore(self, thread_id, member_name, increment):
+    pass
 
-class DbParticipantRepository(object):
-  @staticmethod
-  def _GenerateKey(thread_id, name):
-    normalized_name = name.capitalize()
-    return "%s-%s" % (thread_id, normalized_name)
+  @abc.abstractmethod
+  def Scores(self, thread_id):
+    """Returns a list of ParticipantScores"""
+    pass
 
-  def ParticipantByName(self, thread_id, name):
-    participant_key = DbParticipantRepository._GenerateKey(thread_id, name)
-    participant = db.get(db.Key.from_path('Participant', participant_key))
-    if not participant:
-      participant = Participant(key_name = participant_key)
-      participant.name = name
-      participant.score = 0
-      participant.thread_id = thread_id
-    return participant
+ParticipantScore = collections.namedtuple("ParticipantScore", ["name", "score"])
 
-  def ParticipantsForThread(self, thread_id):
-    q = Participant.all()
-    q.filter("thread_id =", thread_id)
-    return q.run()
-    
 
 TRIGGER = re.compile('.*?([a-zA-Z0-9]*)((\\+\\+)|(--)).*', re.IGNORECASE)
 
 
 class ScoreKeeper(object):
-  def __init__(self):
-    self._participant_repo = DbParticipantRepository()
+  def __init__(self, score_table):
+    self._score_table = score_table
 
   def IncrementScore(self, conversation, addressee, increment):
-    participant = self._participant_repo.ParticipantByName(conversation.ThreadId(), addressee)
-    participant.score += increment
-    participant.put()
-    conversation.PostMessage("%s, you're at %d." % (addressee, participant.score))
+    new_score, is_new = self.scores.IncrementParticipantScore(
+        conversation.ThreadId(), addressee, increment)
+    if is_new:
+      conversation.PostMessage("Hello %s. You start at %d." % (addressee, new_score))
+    else:
+      conversation.PostMessage("%s, you're at %d." % (addressee, new_score))
   
   def PrintScores(self, conversation):
-    participants = self._participant_repo.ParticipantsForThread(conversation.ThreadId())
-    participants = sorted(participants, key=attrgetter('score'), reverse=True)
-    
-    max_name_width = max([len(p.name) for p in participants])
+    scores = self._score_table.Scores(conversation.ThreadId())    
+    max_name_width = max([len(ps.name) for ps in scores])
     message = '==== LEADERBOARD ====\n'
-    for p in participants:
-      message += '%-*s -> %d\n' % (max_name_width + 1, p.name, p.score)
+    for ps in scores:
+      message += '%-*s -> %d\n' % (max_name_width + 1, ps.name, ps.score)
     conversation.PostMessage(message)      
 
   def HandleMessages(self, conversation):
