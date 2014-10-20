@@ -1,10 +1,10 @@
 import unittest
 
 import congratboto
+from conversation import (UserConversation, Message, User)
 
-from adaptors.facebook_graph import Message, User
 
-class UserConversation(object):
+class UserConversation(UserConversation):
   def __init__(self, messages):
     self._initial_messages = messages
     self._posted_messages = []
@@ -17,6 +17,10 @@ class UserConversation(object):
 
   def PostMessage(self, message):
     self._posted_messages.append(message)
+
+  # Unused UserConversation methods
+  def Members(self): pass
+  def Id(self): pass
 
 
 class CongratBotoTest(unittest.TestCase):

@@ -1,7 +1,8 @@
-import collections
 import json
 import urllib2
 import urllib
+
+from plugins import conversation
 
 class AuthenticatedUser(object):
   def __init__(self, write_session, access_token):
@@ -14,7 +15,7 @@ class AuthenticatedUser(object):
     return ExtractConversations(self._write_session, inbox_str)
 
 
-class UserConversation(object):
+class UserConversation(conversation.UserConversation):
   def __init__(self, write_session, tid, members, messages):
     self._tid = tid
     self._write_session = write_session
@@ -27,24 +28,21 @@ class UserConversation(object):
   def Messages(self):
     return self._messages
 
-  def ThreadId(self):
+  def Id(self):
     return self._tid
 
   def PostMessage(self, message):
     self._write_session.PostMessage(self._tid, message)
 
 
-User = collections.namedtuple("User", ["uid", "name"])
-Message = collections.namedtuple("Message", ["mid", "user", "text"])  # TODO: add timestamp
-Conversation = collections.namedtuple("Conversation", ["cid", "members", "messages"])
-
 def UserFromJson(user_json):
   if user_json is None: return None
-  return User(user_json["id"], user_json["name"])
+  return conversation.User(user_json["id"], user_json["name"])
 
 
 def MessageFromJson(msg_json):
-  return Message(msg_json["id"], UserFromJson(msg_json.get("from")), msg_json.get("message"))
+  return conversation.Message(
+      msg_json["id"], UserFromJson(msg_json.get("from")), msg_json.get("message"))
 
 
 # This map knows how to go from the Graph conversation id, to the scrape id for posting.

@@ -6,7 +6,7 @@ from google.appengine.ext.webapp.util import run_wsgi_app
 
 import bot_driver_util
 import db_score_table
-from adaptors import facebook
+from adaptors import facebook_page
 from adaptors import facebook_graph
 from plugins.eliza import ElizaPlugin
 from plugins.congratboto import CongratBoto
@@ -29,7 +29,7 @@ class PollPage(webapp.RequestHandler):
     self.response.headers['Content-Type'] = 'text/plain'
     self.response.out.write('Running Congratboto')
 
-    write_session = facebook.FacebookSession('Turma Bot', bot_email, bot_pwd)
+    write_session = facebook_page.FacebookSession('Turma Bot', bot_email, bot_pwd)
     boto_user = facebook_graph.AuthenticatedUser(write_session, access_token)
     all_plugins = [CongratBoto(), ElizaPlugin(), ScoreKeeper(db_score_table.DbScoreTable())]
     bot_driver_util.PollConversations(boto_user, all_plugins, False)

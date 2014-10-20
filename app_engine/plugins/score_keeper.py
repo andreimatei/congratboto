@@ -31,14 +31,14 @@ class ScoreKeeper(object):
 
   def IncrementScore(self, conversation, addressee, increment):
     new_score, is_new = self.scores.IncrementMemberScore(
-        conversation.ThreadId(), addressee, increment)
+        conversation.Id(), addressee, increment)
     if is_new:
       conversation.PostMessage("Hello %s. You start at %d." % (addressee, new_score))
     else:
       conversation.PostMessage("%s, you're at %d." % (addressee, new_score))
   
   def PrintScores(self, conversation):
-    scores = self._score_table.Scores(conversation.ThreadId())    
+    scores = self._score_table.Scores(conversation.Id())    
     max_name_width = max([len(ps.name) for ps in scores])
     message = '==== LEADERBOARD ====\n'
     for ps in scores:

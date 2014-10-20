@@ -13,7 +13,7 @@ def PollConversations(bot_user, all_plugins, periodic):
     conversations = bot_user.GetConversations()
     logger.debug("Found %d conversations" % len(conversations))
     for conversation in conversations.values():
-      logger.debug("Processing thread thread_id=%s", conversation.ThreadId())
+      logger.debug("Processing thread thread_id=%s", conversation.Id())
       for plugin in all_plugins:
         plugin.HandleMessages(conversation)
   except Exception:
