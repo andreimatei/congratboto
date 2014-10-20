@@ -4,7 +4,6 @@ import os
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
 
-import bot_driver_util
 import db_score_table
 from adaptors import facebook_page
 from adaptors import facebook_graph
@@ -18,7 +17,8 @@ logger = logging.getLogger('page_handler')
 class MainPage(webapp.RequestHandler):
   def get(self):
     pass
- 
+
+
 class PollPage(webapp.RequestHandler):
   def get(self):
     bot_email = self.request.get('bot_email')
@@ -32,7 +32,17 @@ class PollPage(webapp.RequestHandler):
     write_session = facebook_page.FacebookSession('Turma Bot', bot_email, bot_pwd)
     boto_user = facebook_graph.AuthenticatedUser(write_session, access_token)
     all_plugins = [CongratBoto(), ElizaPlugin(), ScoreKeeper(db_score_table.DbScoreTable())]
-    bot_driver_util.PollConversations(boto_user, all_plugins, False)
+    try:
+      logger.debug("Getting Inbox")
+      conversations = boto_user.GetConversations()
+      logger.debug("Found %d conversations" % len(conversations))
+      for conversation in conversations.values():
+        logger.debug("Processing thread thread_id=%s", conversation.Id())
+        for plugin in all_plugins:
+          plugin.HandleMessages(conversation)
+    except Exception:
+      logger.exception('Error while polling')
+
 
 
 def main():
