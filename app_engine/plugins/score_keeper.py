@@ -30,7 +30,7 @@ class ScoreKeeper(object):
     self._score_table = score_table
 
   def IncrementScore(self, conversation, addressee, increment):
-    new_score, is_new = self.scores.IncrementMemberScore(
+    new_score, is_new = self._score_table.IncrementMemberScore(
         conversation.Id(), addressee, increment)
     if is_new:
       conversation.PostMessage("Hello %s. You start at %d." % (addressee, new_score))
