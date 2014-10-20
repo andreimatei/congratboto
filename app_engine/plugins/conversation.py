@@ -5,16 +5,24 @@ class UserConversation(object):
   __metaclass__ = abc.ABCMeta
 
   @abc.abstractmethod
-  def Id(self): pass
+  def Id(self):
+    """Returns the unique id for this conversation."""
+    pass
 
   @abc.abstractmethod
-  def Members(self): pass
+  def Members(self):
+    """Returns the list of User members for this conversation."""
+    pass
 
   @abc.abstractmethod
-  def Messages(self): pass
+  def Messages(self):
+    """Returns a list of Messages for this conversation."""
+    pass
 
   @abc.abstractmethod
-  def PostMessage(self, message): pass
+  def PostMessage(self, message):
+    """Posts a message to this conversation"""
+    pass
 
 
 User = collections.namedtuple("User", ["uid", "name"])

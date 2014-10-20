@@ -32,23 +32,16 @@ def generate_message(adresee):
   else:
     return tup
 
-BOT_ID = "100007101244912"
 
 #TODO(burbelica): only trigger on "awesome" if it's before a separator, not in the middle of a random phrase 
 TRIGGER = re.compile('.*((\+congratboto?|congratulations|(good|awesome|great) job)(\s([a-zA-Z0-9]+).*)?|awesome|amazeballs).*', re.IGNORECASE)
 
 class CongratBoto(object):
-  def HandleMessages(self, conversation):
-    messages = conversation.Messages()
+  def HandleMessages(self, conversation, new_messages):
     congrat_needed = False
     to_congrat = []
-    for message in messages:
+    for message in new_messages:
       if not message.text: continue
-      if message.user and message.user.uid == BOT_ID:
-        # clear everything from before
-        congrat_needed = False
-        del to_congrat[:]
-        continue
       match = TRIGGER.match(message.text)
       if match:
         congrat_needed = True

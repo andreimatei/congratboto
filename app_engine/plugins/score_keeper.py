@@ -3,9 +3,6 @@ import collections
 import re
 
 
-BOT_ID = "100007101244912"
-
-
 class ScoreTable(object):
   """Keeps track of user scores in a thread"""
   __metaclass__ = abc.ABCMeta
@@ -45,17 +42,11 @@ class ScoreKeeper(object):
       message += '%-*s -> %d\n' % (max_name_width + 1, ps.name, ps.score)
     conversation.PostMessage(message)      
 
-  def HandleMessages(self, conversation):
-    messages = conversation.Messages()
+  def HandleMessages(self, conversation, new_messages):
     to_score = []  # (name, increment)
     scores_needed = False
-    for message in messages:
+    for message in new_messages:
       if not message.text: continue
-      if message.user and message.user.uid == BOT_ID:
-        # clear everything from before
-        del to_score[:]
-        scores_needed = False
-        continue
       match = TRIGGER.match(message.text)
       if match:
         if match.groups()[0]:

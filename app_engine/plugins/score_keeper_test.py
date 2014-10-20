@@ -20,17 +20,18 @@ class SimpleScoreTable(score_keeper.ScoreTable):
 
 class ScoreKeeperTest(unittest.TestCase):
   def testPost(self):
+    conversation = SimpleUserConversation(conversation_id="cid")
     sample_user = User(uid="uid", name="<user_name>")
-    conversation = SimpleUserConversation(conversation_id="cid", messages=[
+    new_messages = [
       Message(mid="m1", user=sample_user, text="Vini++"),
       Message(mid="m2", user=sample_user, text="Foo--"),
       Message(mid="m3", user=sample_user, text="Vini++"),
       Message(mid="m4", user=sample_user, text="Vini--"),
       Message(mid="m5", user=sample_user, text="Vini++"),
-    ])
+    ]
     score_table = SimpleScoreTable()
     boto = score_keeper.ScoreKeeper(score_table)
-    boto.HandleMessages(conversation)
+    boto.HandleMessages(conversation, new_messages)
     print conversation.GetPostedMessages()
     self.assertEquals(5, len(conversation.GetPostedMessages()))
     self.assertEquals(2, len(score_table.Scores("cid")))

@@ -19,6 +19,10 @@ class MainPage(webapp.RequestHandler):
     pass
 
 
+# The identifier of the Bot user on Facebook.
+BOT_ID = "100007101244912"
+
+
 class PollPage(webapp.RequestHandler):
   def get(self):
     bot_email = self.request.get('bot_email')
@@ -38,8 +42,16 @@ class PollPage(webapp.RequestHandler):
       logger.debug("Found %d conversations" % len(conversations))
       for conversation in conversations.values():
         logger.debug("Processing thread thread_id=%s", conversation.Id())
+        new_messages = []
+        for message in conversation.Messages():
+          if message.user and message.user.uid == BOT_ID:
+            new_messages = []
+          else:
+            new_messages.append(message)
+        if not new_messages:
+          continue
         for plugin in all_plugins:
-          plugin.HandleMessages(conversation)
+          plugin.HandleMessages(conversation, new_messages)
     except Exception:
       logger.exception('Error while polling')
 
