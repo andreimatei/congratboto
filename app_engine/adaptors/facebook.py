@@ -1,3 +1,6 @@
+import sys
+sys.path.insert(0, 'third_party')
+
 import cookielib
 import datetime
 import logging

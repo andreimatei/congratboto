@@ -11,15 +11,15 @@ class ScoreTable(object):
   __metaclass__ = abc.ABCMeta
 
   @abc.abstractmethod
-  def IncrementParticipantScore(self, thread_id, member_name, increment):
+  def IncrementMemberScore(self, thread_id, member_name, increment):
     pass
 
   @abc.abstractmethod
   def Scores(self, thread_id):
-    """Returns a list of ParticipantScores"""
+    """Returns a list of MemberScores"""
     pass
 
-ParticipantScore = collections.namedtuple("ParticipantScore", ["name", "score"])
+MemberScore = collections.namedtuple("MemberScore", ["name", "score"])
 
 
 TRIGGER = re.compile('.*?([a-zA-Z0-9]*)((\\+\\+)|(--)).*', re.IGNORECASE)
@@ -30,7 +30,7 @@ class ScoreKeeper(object):
     self._score_table = score_table
 
   def IncrementScore(self, conversation, addressee, increment):
-    new_score, is_new = self.scores.IncrementParticipantScore(
+    new_score, is_new = self.scores.IncrementMemberScore(
         conversation.ThreadId(), addressee, increment)
     if is_new:
       conversation.PostMessage("Hello %s. You start at %d." % (addressee, new_score))

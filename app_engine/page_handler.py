@@ -1,6 +1,3 @@
-import sys
-sys.path.insert(0, 'libs')
-
 import logging
 import os
 
@@ -9,11 +6,11 @@ from google.appengine.ext.webapp.util import run_wsgi_app
 
 import bot_driver_util
 import db_score_table
-import facebook
-import facebook_graph
-from plugins.eliza_plugin import ElizaPlugin
+from adaptors import facebook
+from adaptors import facebook_graph
+from plugins.eliza import ElizaPlugin
 from plugins.congratboto import CongratBoto
-from plugins.score_keeper_plugin import ScoreKeeper
+from plugins.score_keeper import ScoreKeeper
 
 
 logger = logging.getLogger('page_handler')

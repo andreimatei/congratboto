@@ -2,7 +2,7 @@ import unittest
 
 import congratboto
 
-from facebook_graph import Message, User
+from adaptors.facebook_graph import Message, User
 
 class UserConversation(object):
   def __init__(self, messages):

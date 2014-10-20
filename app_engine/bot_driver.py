@@ -8,9 +8,9 @@ import sys
 from congratboto.congratboto.bot_driver_util import *
 from congratboto.congratboto import facebook
 from congratboto.congratboto import facebook_graph
-from plugins.eliza_plugin import ElizaPlugin
+from plugins.eliza import ElizaPlugin
 from plugins.congratboto import CongratBoto
-from plugins.score_keeper_plugin import ScoreKeeper
+from plugins.score_keeper import ScoreKeeper
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--access_token', required = True)
