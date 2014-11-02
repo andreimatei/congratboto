@@ -45,18 +45,16 @@ def MessageFromJson(msg_json):
       msg_json["id"], UserFromJson(msg_json.get("from")), msg_json.get("message"))
 
 
-# This map knows how to go from the Graph conversation id, to the scrape id for posting.
-READ_TO_WRITE_MAP = {
-   # Turma                  
-  "669740653053963": "id.669740653053963",
+# This map knows how to go from the Graph conversation id, to the scrape thread id for posting.
+CONVERSATION_TO_THREAD_IDS = {
   # Vini
   "387408068058873": "mid.1384790752857:7f74c5cd85790a7b22",
   # Andrei
   "1422830054600298": "mid.1384722860563:3932eedf826bf6c982",
-  # Temp Turma
-  "620590488002789": "id.566416863439275",
   # Lorena
-  "1378876915695040": "mid.1386221476449:ecba88a4313984db59"
+  "1378876915695040": "mid.1386221476449:ecba88a4313984db59",
+  # Robert
+  "628569283851237": "mid.1386221488851:82b0f36e2860e00244"
 }
 
 
@@ -77,7 +75,7 @@ def ExtractConversations(write_session, inbox_str):
       # for group chats, you get the thread id by prepending "id."
       thread_id = "id.%s" % cid
     else:
-      thread_id = READ_TO_WRITE_MAP.get(cid)
+      thread_id = CONVERSATION_TO_THREAD_IDS.get(cid)
       if not thread_id: continue
     conversations[cid] = UserConversation(write_session, thread_id, members, messages)    
   return conversations

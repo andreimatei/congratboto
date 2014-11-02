@@ -8,6 +8,10 @@ handlers:
 - url: /poll\.html
   script: page_handler.py
 
+- url: /credentials
+  script: admin/set_credentials.py
+  login: admin
+  secure: always
+
 - url: /.*
   script: page_handler.py
-

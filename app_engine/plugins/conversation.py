@@ -4,21 +4,26 @@ import collections
 class UserConversation(object):
   __metaclass__ = abc.ABCMeta
 
+  # This is used to store per conversation state by ScoreKeeper.
   @abc.abstractmethod
   def Id(self):
     """Returns the unique id for this conversation."""
     pass
 
+  # This is used by Eliza to know whether this is an individual or group conversation.
   @abc.abstractmethod
   def Members(self):
     """Returns the list of User members for this conversation."""
     pass
 
+  # Not used by any plugin. This is only called in the page handler.
+  # Maybe we can remove it from here.
   @abc.abstractmethod
   def Messages(self):
     """Returns a list of Messages for this conversation."""
     pass
 
+  # Used by all the plugins to post messages to a Conversation.
   @abc.abstractmethod
   def PostMessage(self, message):
     """Posts a message to this conversation"""

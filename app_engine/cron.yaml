@@ -1,4 +1,4 @@
 cron:
 - description: daily summary job
-  url: /poll.html?bot_email=<EMAIL>&bot_pwd=<PASSWORD>&access_token=<TOKEN>
+  url: /poll.html
   schedule: every 1 minutes

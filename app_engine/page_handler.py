@@ -4,6 +4,7 @@ import os
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
 
+import credentials_repository
 import db_score_table
 from adaptors import facebook_page
 from adaptors import facebook_graph
@@ -20,21 +21,20 @@ class MainPage(webapp.RequestHandler):
 
 
 # The identifier of the Bot user on Facebook.
-BOT_ID = "100007101244912"
-
+BOT_ID = '100007101244912'
+BOT_NAME = 'Turma Bot'
 
 class PollPage(webapp.RequestHandler):
   def get(self):
-    bot_email = self.request.get('bot_email')
-    bot_pwd = self.request.get('bot_pwd')
-    access_token = self.request.get('access_token')
-    logger.info('Request: bot email: %s password: %s access_token: %s' % (bot_email, bot_pwd, access_token))
+    credentials = credentials_repository.GetCredentials()
+    logger.info('Request: bot email: %s password: %s access_token: %s' % (
+        credentials.email, credentials.password, credentials.access_token))
 
     self.response.headers['Content-Type'] = 'text/plain'
     self.response.out.write('Running Congratboto')
 
-    write_session = facebook_page.FacebookSession('Turma Bot', bot_email, bot_pwd)
-    boto_user = facebook_graph.AuthenticatedUser(write_session, access_token)
+    write_session = facebook_page.FacebookSession(BOT_NAME, credentials.email, credentials.password)
+    boto_user = facebook_graph.AuthenticatedUser(write_session, credentials.access_token)
     all_plugins = [CongratBoto(), ElizaPlugin(), ScoreKeeper(db_score_table.DbScoreTable())]
     try:
       logger.debug("Getting Inbox")
