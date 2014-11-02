@@ -32,11 +32,26 @@ class ScoreKeeperTest(unittest.TestCase):
     score_table = SimpleScoreTable()
     boto = score_keeper.ScoreKeeper(score_table)
     boto.HandleMessages(conversation, new_messages)
+
     print conversation.GetPostedMessages()
     self.assertEquals(5, len(conversation.GetPostedMessages()))
     self.assertEquals(2, len(score_table.Scores("cid")))
     self.assertEquals(2, score_table.Scores("cid")[0].score)
     self.assertEquals(-1, score_table.Scores("cid")[1].score)
+
+  def testEmptyScoreCall(self):
+    conversation = SimpleUserConversation(conversation_id="cid")
+    sample_user = User(uid="uid", name="<user_name>")
+    new_messages = [
+      Message(mid="m1", user=sample_user, text="/score"),
+    ]
+    score_table = SimpleScoreTable()
+    boto = score_keeper.ScoreKeeper(score_table)
+    boto.HandleMessages(conversation, new_messages)
+
+    print conversation.GetPostedMessages()
+    self.assertEquals(1, len(conversation.GetPostedMessages()))
+    self.assertEquals(0, len(score_table.Scores("cid")))
 
 if __name__ == "__main__":
   unittest.main()

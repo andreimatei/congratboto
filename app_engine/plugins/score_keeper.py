@@ -35,7 +35,11 @@ class ScoreKeeper(object):
       conversation.PostMessage("%s, you're at %d." % (addressee, new_score))
   
   def PrintScores(self, conversation):
-    scores = self._score_table.Scores(conversation.Id())    
+    scores = self._score_table.Scores(conversation.Id())
+    if not scores:
+      conversation.PostMessage("No score point has been assigned")
+      return
+      
     max_name_width = max([len(ps.name) for ps in scores])
     message = '==== LEADERBOARD ====\n'
     for ps in scores:
