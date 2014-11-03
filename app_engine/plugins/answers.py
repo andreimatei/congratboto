@@ -17,4 +17,11 @@ class AnswersPlugin(object):
       logging.info("Answering: %s", message.text)
       answer = google_answers.GetAnswer(message.text)
       if answer is not None:
-        conversation.PostMessage(answer)
+        logging.info("Answering with %s", answer)
+        reply = ""
+        if message.user and len(conversation.Members()) > 2:
+          reply = u"@%s: " % message.user
+        reply += answer
+        conversation.PostMessage(reply)
+      else:
+        logging.info("No answer found.")

@@ -61,7 +61,8 @@ class FacebookSession(object):
     try:
       if not self.csrf_token:
         self.csrf_token = self.GetCsrfToken(thread_id)
-      formdata = { 'fb_dtsg' : self.csrf_token, 'body' : message, 'tids' : thread_id }
+      formdata = {'fb_dtsg' : self.csrf_token, 'body' : message.encode('utf-8'),
+                  'tids' : thread_id}
       data_encoded = urllib.urlencode(formdata)
       # TODO(fortuna): Check the response to confirm the post.
       self._GetOpener().open("https://m.facebook.com//messages/send/?icm=1&refid=12", data_encoded)
