@@ -21,7 +21,8 @@ def GetLastQuestion(messages):
 
 class AnswersPlugin(object):
   def HandleMessages(self, conversation, new_messages):
-    last_question = GetLastQuestion(new_messages)
+    # TODO(fortuna): Save timestamp of last processed message to avoid re-processing.
+    last_question = GetLastQuestion(new_messages[-5:])
     if not last_question:
       return
     logging.info("Answering: %s", last_question.text)
