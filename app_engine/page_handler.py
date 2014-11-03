@@ -11,7 +11,7 @@ from adaptors import facebook_graph
 from plugins.eliza import ElizaPlugin
 from plugins.congratboto import CongratBoto
 from plugins.score_keeper import ScoreKeeper
-
+from plugins.answers import AnswersPlugin
 
 logger = logging.getLogger('page_handler')
 
@@ -35,7 +35,8 @@ class PollPage(webapp.RequestHandler):
 
     write_session = facebook_page.FacebookSession(BOT_NAME, credentials.email, credentials.password)
     boto_user = facebook_graph.AuthenticatedUser(write_session, credentials.access_token)
-    all_plugins = [CongratBoto(), ElizaPlugin(), ScoreKeeper(db_score_table.DbScoreTable())]
+    all_plugins = [CongratBoto(), ElizaPlugin(), ScoreKeeper(db_score_table.DbScoreTable()),
+                   AnswersPlugin()]
     try:
       logger.debug("Getting Inbox")
       conversations = boto_user.GetConversations()
