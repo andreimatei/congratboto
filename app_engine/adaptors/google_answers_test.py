@@ -18,6 +18,12 @@ class TestParseResponse(unittest.TestCase):
         .read().decode('utf-8')
     self.assertEquals(u"Bras\u00EDlia", google_answers.ExtractAnswer(page_html))
 
+  def testExtractHoliday(self):
+    page_html = open(os.path.join(os.path.dirname(__file__), "test_data", "thanksgiving.html"))\
+        .read().decode('utf-8')
+    self.assertEquals(u"Thursday, November 27", google_answers.ExtractAnswer(page_html))
+
+
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']
     unittest.main()

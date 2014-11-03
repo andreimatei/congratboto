@@ -5,7 +5,12 @@ Adaptor to get answers from Google Search
 import cookielib
 import logging
 import re
+import sys
 import urllib2
+
+sys.path.insert(0, 'third_party')
+
+import bs4
 
 logger = logging.getLogger('google_answers')
 
@@ -24,12 +29,16 @@ def GetAnswer(question):
   return ExtractAnswer(page_html)
 
 
-ANSWER_RE = re.compile(ur'<div class="_eF">(.*?)</div>', re.UNICODE)
+ANSWER_RE = re.compile(
+    ur'<div class="_eF">(.*?)</div>|<div class="vk_bk vk_ans"> +(.*?)</div>', re.UNICODE)
 
 def ExtractAnswer(page_html):
   match = ANSWER_RE.search(page_html)
   if match:
-    return match.group(1)
+    if match.group(1): answer_html = match.group(1)
+    else: answer_html = match.group(2)
+    soup = bs4.BeautifulSoup(answer_html)
+    return soup.getText()
   return None
 
   
