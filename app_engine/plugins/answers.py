@@ -16,4 +16,5 @@ class AnswersPlugin(object):
         continue
       logging.info("Answering: %s", message.text)
       answer = google_answers.GetAnswer(message.text)
-      conversation.PostMessage(answer)
+      if answer is not None:
+        conversation.PostMessage(answer)
