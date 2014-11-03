@@ -8,6 +8,8 @@ import logging
 
 logger = logging.getLogger('answers')
 
+def GetFirstName(full_name):
+  return full_name.split()[0]
 
 class AnswersPlugin(object):
   def HandleMessages(self, conversation, new_messages):
@@ -19,8 +21,8 @@ class AnswersPlugin(object):
       if answer is not None:
         logging.info("Answering with %s", answer)
         reply = ""
-        if message.user and len(conversation.Members()) > 2:
-          reply = u"@%s: " % message.user
+        if message.user and message.user.name and len(conversation.Members()) > 2:
+          reply = u"@%s: " % GetFirstName(message.user.name)
         reply += answer
         conversation.PostMessage(reply)
       else:

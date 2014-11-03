@@ -30,7 +30,7 @@ def GetAnswer(question):
 
 
 ANSWER_RE = re.compile(
-    ur'<div class="_eF">(.*?)</div>|<div class="vk_bk vk_ans"> +(.*?)</div>', re.UNICODE)
+    ur'<div class="_eF">(.*?)</div>|<div class="vk_bk vk_ans"> *(.*?)</div>', re.UNICODE)
 
 def ExtractAnswer(page_html):
   match = ANSWER_RE.search(page_html)
